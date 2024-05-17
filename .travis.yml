@@ -3,7 +3,7 @@ dist: focal
 language: python
 
 python:
-  - 3.8
+  - 3.11.6
 
 install:
   - sudo apt -y install python3-distutils
@@ -29,6 +29,6 @@ install:
   - ls bin/ -l
   - echo "TODO"
   - gem install dpl --pre
-  - dpl releases --token $GITHUB_TOKEN --file "bin/mobileapp001-0.1-armeabi-v7a-debug.apk" --tag_name "v.0.1"
+  - dpl releases --token $Github --file "bin/mobileapp001-0.1-armeabi-v7a-debug.apk" --tag_name "v.0.1"
   - echo "TODO 2"
 
