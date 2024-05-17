@@ -1,0 +1,27 @@
+<NewPatientScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: root.info_message
+        TextInput:
+            id: name_input
+            hint_text: 'Name'
+        TextInput:
+            id: surname_input
+            hint_text: 'Surname'
+        TextInput:
+            id: patronymic_input
+            hint_text: 'Patronymic'
+        TextInput:
+            id: birth_date_input
+            hint_text: 'Birth Date'
+        Spinner:
+            id: sex_input
+            text: 'Select Sex'
+            values: ['Male', 'Female']
+        Button:
+            text: 'Save Patient'
+            on_press: root.save_patient(name_input.text, surname_input.text, patronymic_input.text, birth_date_input.text, sex_input.text)
+        Button:
+            text: 'Back'
+            on_press: app.root.current = 'main'

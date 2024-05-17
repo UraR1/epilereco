@@ -1,0 +1,28 @@
+<SeizureInfoScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: root.info_message
+        Spinner:
+            id: patient_name_input
+            text: 'Select Patient'
+            values: root.get_patient_names()  # Fetch patient names dynamically
+        TextInput:
+            id: seizure_start_input
+            hint_text: 'DD.MM.YYYY HH:MM:SS'
+        TextInput:
+            id: seizure_duration_input
+            hint_text: 'Seizure Duration (seconds)'
+        TextInput:
+            id: seizure_type_input
+            hint_text: 'Seizure Type (optional)'
+        Button:
+            text: 'Save Seizure Info'
+            on_press: root.save_seizure_info(patient_name_input.text, seizure_start_input.text, seizure_duration_input.text, seizure_type_input.text)
+        Button:
+            text: 'Video'
+            on_press: app.root.current = 'RecordApp'
+
+        Button:
+            text: 'Back'
+            on_press: app.root.current = 'main'

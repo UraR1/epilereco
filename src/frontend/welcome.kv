@@ -1,0 +1,10 @@
+<WelcomeScreen>:
+    orientation: 'vertical'
+    Label:
+        text: 'Welcome to MyApp'
+    Button:
+        text: 'Login'
+        on_press: app.root.current = 'login'
+    Button:
+        text: 'Sign Up'
+        on_press: app.root.current = 'signup'

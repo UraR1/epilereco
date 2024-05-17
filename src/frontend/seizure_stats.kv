@@ -1,0 +1,16 @@
+<SeizureStatsScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Spinner:
+            id: patient_name_input
+            text: 'Select Patient'
+            values: root.get_patient_names()  # Fetch patient names dynamically
+        Button:
+            text: 'Show Statistics'
+            on_press: root.show_statistics(patient_name_input.text)
+        Label:
+            id: stats_label
+            text: root.text_label
+        Button:
+            text: 'Back'
+            on_press: app.root.current = 'main'
