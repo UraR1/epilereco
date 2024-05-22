@@ -11,7 +11,8 @@ from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect
-
+from kivy.utils import platform
+from android import request_permissions, Permission
 
 class RecordAppScreen(Screen):
     info_message = StringProperty("")
