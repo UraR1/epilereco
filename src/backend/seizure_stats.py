@@ -19,5 +19,5 @@ class SeizureStatsScreen(Screen):
             cursor = connection.cursor()
             cursor.execute(f"SELECT AVG(seizure_duration) FROM seizure WHERE patient_name = '{patient_name}'")
             result = cursor.fetchone()[0]
-        self.text_label = (f"Среднее значение длительности приступа для пациента {patient_name} равно {result}.")
+        self.text_label = (f"Среднее значение длительности приступа\n для пациента {patient_name} равно  {result}.")
 
