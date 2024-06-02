@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
-from database.database import connect, is_valid_date_seconds, is_number, stop_recording, start_recording
+from database.database import connect, is_valid_date_seconds, is_number, stop_recording, start_recording, get_current_number
 
 class SeizureInfoScreen(Screen):
     info_message = StringProperty("")
@@ -16,21 +16,29 @@ class SeizureInfoScreen(Screen):
             patient_name = [" ".join(row) for row in result]
         return patient_name
 
-    def save_seizure_info(self, patient_name, seizure_start, seizure_duration, seizure_type):
+    def save_seizure_info(self, seizure_start, seizure_duration, seizure_type):
         with connect() as connection:
-            if patient_name != "Select Patient":
+            #if patient_name != "Select Patient":
                 if is_valid_date_seconds(seizure_start):
                     if is_number(seizure_duration):
                         self.info_message = "Success!"
                         cursor = connection.cursor()
-                        cursor.execute("INSERT INTO seizure (patient_name, seizure_start, seizure_duration, seizure_type) VALUES (?, ?, ?, ?)", (patient_name, seizure_start, seizure_duration, seizure_type))
+                        number = get_current_number()
+                        cursor.execute(
+                            '''SELECT name, surname, patronymic, birth_date FROM patient WHERE number = ? ''',
+                            (number,))
+                        result = cursor.fetchall()
+                        for row in result:
+                            name, surname, patronymic, birth_date = row
+                        patient_name = f"{name} {surname} {patronymic} ({birth_date})"
+                        cursor.execute("INSERT INTO seizure (number, seizure_start, seizure_duration, seizure_type, patient_name) VALUES (?, ?, ?, ?, ?)", (number, seizure_start, seizure_duration, seizure_type, patient_name))
                         connection.commit()
                     else:
                         self.info_message = "Invalid Duration"
                 else:
                     self.info_message = "Invalid Date"
-            else:
-                self.info_message = "Invalid Patient"
+            #else:
+                #self.info_message = "Invalid Patient"
 
 #@    def start_recording(self, instance):
 #

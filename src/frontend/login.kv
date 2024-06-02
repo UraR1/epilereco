@@ -10,9 +10,13 @@
         id: password
         hint_text: 'Password'
         password: True
+    Spinner:
+        id: role
+        text: 'Select user type'
+        values: ['Patient', 'Doctor']
     Button:
         text: 'Login'
-        on_press: root.login(username.text, password.text)
+        on_press: root.login(username.text, password.text, role.text)
 
     Button:
         text: 'Back'

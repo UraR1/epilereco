@@ -10,7 +10,7 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty, ObjectProperty
-from database.database import connect
+from database.database import connect, get_current_number
 #from kivy.utils import platform
 #from android import request_permissions, Permission
 
@@ -18,7 +18,7 @@ class RecordAppScreen(Screen):
     info_message = StringProperty("")
     image = Image()
     video_texture = ObjectProperty(None)
-    def start_recording(self, instance,patient_id):
+    def start_recording(self, instance):
         self.recording = True
         self.capture = cv2.VideoCapture(0)
         self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -29,7 +29,8 @@ class RecordAppScreen(Screen):
         Clock.schedule_once(self.update, 1 / 30.)
         with connect() as connection:
             cursor = connection.cursor()
-            cursor.execute("INSERT INTO video (patient_id,video_name) VALUES (?, ?)", (patient_id,date_string))
+            number = get_current_number()
+            cursor.execute("INSERT INTO video (number,video_name) VALUES (?, ?)", (number,date_string))
             connection.commit()
     def get_patient_id(self):
         with connect() as connection:

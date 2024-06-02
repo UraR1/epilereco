@@ -12,7 +12,7 @@
             values: root.get_patient_id()
         Button:
             text: 'Start recording'
-            on_press: root.start_recording(self, patient_id_input.text)
+            on_press: root.start_recording(self)
         Button:
             text: 'Stop recording'
             on_press: root.stop_recording(self)

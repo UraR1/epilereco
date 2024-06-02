@@ -20,8 +20,17 @@
             text: 'Select Sex'
             values: ['Male', 'Female']
         Button:
-            text: 'Save Patient'
+            text: 'Save info'
             on_press: root.save_patient(name_input.text, surname_input.text, patronymic_input.text, birth_date_input.text, sex_input.text)
         Button:
+            text: 'Show unique code'
+            on_press: root.unique_code()
+
+        Label:
+            text: root.number_message
+        Button:
+            text: 'Delete info'
+            on_press: root.delete_patient()
+        Button:
             text: 'Back'
-            on_press: app.root.current = 'main'
+            on_press: app.root.current = 'patient'

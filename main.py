@@ -5,6 +5,9 @@ from src.backend.seizure_info import SeizureInfoScreen
 from src.backend.seizure_stats import SeizureStatsScreen
 from src.backend.RecordApp import RecordAppScreen
 from src.backend.signup import SignupScreen
+from src.backend.patient import PatientScreen
+from src.backend.doctor import DoctorScreen
+from src.backend.add_new_patient import AddNewPatientScreen
 from src.backend.main import MainScreen
 from src.backend.new_patient import NewPatientScreen
 from src.backend.welcome import WelcomeScreen
@@ -21,6 +24,9 @@ Builder.load_file('src/frontend/new_patient.kv')
 Builder.load_file('src/frontend/seizure_info.kv')
 Builder.load_file('src/frontend/seizure_stats.kv')
 Builder.load_file('src/frontend/RecordApp.kv')
+Builder.load_file('src/frontend/patient.kv')
+Builder.load_file('src/frontend/doctor.kv')
+Builder.load_file('src/frontend/add_new_patient.kv')
 
 
 class LoginScreenWrapper(Screen):
@@ -42,6 +48,7 @@ class MainWrapper(Screen):
         super().__init__(**kwargs)
         self.main = MainScreen()
         self.add_widget(self.main)
+
 
 
 class WelcomeScreenWrapper(Screen):
@@ -73,6 +80,24 @@ class RecordAppScreenWrapper(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.add_widget(RecordAppScreen())
+class PatientScreenWrapper(Screen):
+    patient = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.patient = PatientScreen()
+        self.add_widget(self.patient)
+class DoctorScreenWrapper(Screen):
+    doctor = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.doctor = DoctorScreen()
+        self.add_widget(self.doctor)
+class AddNewPatientScreenWrapper(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_widget(AddNewPatientScreen())
 
 
 class MainApp(App):
@@ -83,6 +108,9 @@ class MainApp(App):
         sm.add_widget(LoginScreenWrapper(name='login'))
         sm.add_widget(SignupScreenWrapper(name='signup'))
         sm.add_widget(MainWrapper(name='main'))
+        sm.add_widget(AddNewPatientScreenWrapper(name='add_new_patient'))
+        sm.add_widget(PatientScreenWrapper(name='patient'))
+        sm.add_widget(DoctorScreenWrapper(name='doctor'))
         sm.add_widget(NewPatientScreen(name='new_patient'))
         sm.add_widget(SeizureInfoScreen(name='seizure_info'))
         sm.add_widget(SeizureStatsScreen(name='seizure_stats'))

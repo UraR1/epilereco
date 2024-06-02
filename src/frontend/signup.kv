@@ -14,9 +14,13 @@
         id: confirm_password
         hint_text: 'Confirm Password'
         password: True
+    Spinner:
+        id: role
+        text: 'Select user type'
+        values: ['Patient', 'Doctor']
     Button:
         text: 'Sign Up'
-        on_press: root.signup(username.text, password.text, confirm_password.text)
+        on_press: root.signup(username.text, password.text, confirm_password.text, role.text)
 
     Button:
         text: 'Back'

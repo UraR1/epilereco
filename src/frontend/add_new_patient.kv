@@ -1,0 +1,22 @@
+<AddNewPatientScreen>:
+    id: main
+    orientation: 'vertical'
+    Label:
+        text: root.info_message
+
+    TextInput:
+        id: number_input
+        hint_text: 'Unique Number'
+    Button:
+        text: 'Add'
+        on_press: root.update_patient(number_input.text)
+    Button:
+        text: 'My Patients'
+        on_press:root.show_list(self)
+    #Spinner:
+    #    id: patient_list
+    #    text: 'Patient List'
+    #    values: root.get_patient_list()   # Fetch patient names dynamically
+    Button:
+        text: 'Back'
+        on_press: app.root.current = 'doctor'
