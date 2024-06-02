@@ -2,35 +2,47 @@
     BoxLayout:
         orientation: 'vertical'
         Label:
+            size_hint_y: None
+            height: self.texture_size[1]
             text: root.info_message
         TextInput:
+            font_size: '25sp'
             id: name_input
             hint_text: 'Name'
         TextInput:
+            font_size: '25sp'
             id: surname_input
             hint_text: 'Surname'
         TextInput:
+            font_size: '25sp'
             id: patronymic_input
             hint_text: 'Patronymic'
         TextInput:
+            font_size: '25sp'
             id: birth_date_input
             hint_text: 'Birth Date'
         Spinner:
+            font_size: '25sp'
             id: sex_input
             text: 'Select Sex'
             values: ['Male', 'Female']
         Button:
+            font_size: '25sp'
             text: 'Save info'
             on_press: root.save_patient(name_input.text, surname_input.text, patronymic_input.text, birth_date_input.text, sex_input.text)
         Button:
+            font_size: '25sp'
             text: 'Show unique code'
             on_press: root.unique_code()
 
         Label:
+            size_hint_y: None
+            height: self.texture_size[1]
             text: root.number_message
         Button:
             text: 'Delete info'
             on_press: root.delete_patient()
         Button:
+            font_size: '25sp'
             text: 'Back'
             on_press: app.root.current = 'patient'

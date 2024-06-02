@@ -4,30 +4,41 @@
         Image:
             id: image_texture
             size_hint: None, None
-            size: 800, 200
+            size: 800, 400
             texture: root.video_texture
-        Spinner:
-            id: patient_id_input
-            text: 'Select Patient'
-            values: root.get_patient_id()
+        #Spinner:
+        #    id: patient_id_input
+        #    text: 'Select Patient'
+        #    values: root.get_patient_id()
         Button:
+            font_size: '25sp'
             text: 'Start recording'
             on_press: root.start_recording(self)
         Button:
+            font_size: '25sp'
             text: 'Stop recording'
             on_press: root.stop_recording(self)
             on_release: root.save_comment(comment_input.text)
        #     om_release: root.save_video_info(patient_id)
         Label:
+            size_hint_y: None
+            height: self.texture_size[1]
             text: root.info_message
         TextInput:
+            font_size: '14sp'
             id: comment_input
             hint_text: 'Comment'
             multiline: False
         Button:
+            font_size: '25sp'
             text: 'Upload'
             on_press: root.upload_video(self)
             on_release: root.save_comment(comment_input.text)
         Button:
+            font_size: '25sp'
+            text: 'Play'
+            on_press: app.root.current = 'Player'
+        Button:
+            font_size: '25sp'
             text: 'Back'
             on_press: app.root.current = 'seizure_info'

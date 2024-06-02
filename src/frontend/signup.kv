@@ -1,27 +1,35 @@
 <SignupScreen>:
     orientation: 'vertical'
     Label:
+        size_hint_y: None
+        height: self.texture_size[1]
         text: root.error_message
         #color: [1, 0, 0, 1]  # Red color for error messages
     TextInput:
+        font_size: '25sp'
         id: username
         hint_text: 'Username'
     TextInput:
         id: password
+        font_size: '25sp'
         hint_text: 'Password'
         password: True
     TextInput:
+        font_size: '25sp'
         id: confirm_password
         hint_text: 'Confirm Password'
         password: True
     Spinner:
+        font_size: '25sp'
         id: role
         text: 'Select user type'
         values: ['Patient', 'Doctor']
     Button:
+        font_size: '25sp'
         text: 'Sign Up'
         on_press: root.signup(username.text, password.text, confirm_password.text, role.text)
 
     Button:
+        font_size: '25sp'
         text: 'Back'
         on_press: app.root.current = 'welcome'

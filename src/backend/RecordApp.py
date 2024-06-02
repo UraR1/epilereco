@@ -11,6 +11,7 @@ from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
+from kivy.app import App
 #from kivy.utils import platform
 #from android import request_permissions, Permission
 
@@ -19,12 +20,22 @@ class RecordAppScreen(Screen):
     image = Image()
     video_texture = ObjectProperty(None)
     def start_recording(self, instance):
+        with connect() as connection:
+            cursor = connection.cursor()
+            number = get_current_number()
+
         self.recording = True
         self.capture = cv2.VideoCapture(0)
         self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
         now = datetime.datetime.now()
         date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
-        filename = f"videos/output_{date_string}.avi"
+        user_data_dir = App.get_running_app().user_data_dir
+        # Создаем путь к папке с номером пользователя
+        user_folder_path = os.path.join(user_data_dir, str(number))
+        if not os.path.exists(user_folder_path):
+            os.makedirs(user_folder_path)
+        filename = os.path.join(user_folder_path, f"{number}_{date_string}.avi")
+        print(f'Папка "{filename}" успешно создана!')
         self.out = cv2.VideoWriter(filename, self.fourcc, 20.0, (640, 480))
         Clock.schedule_once(self.update, 1 / 30.)
         with connect() as connection:
@@ -32,13 +43,13 @@ class RecordAppScreen(Screen):
             number = get_current_number()
             cursor.execute("INSERT INTO video (number,video_name) VALUES (?, ?)", (number,date_string))
             connection.commit()
-    def get_patient_id(self):
-        with connect() as connection:
-            cursor = connection.cursor()
-            cursor.execute("SELECT Id FROM patient")
-            result = cursor.fetchall()
-            patient_id = [" ".join(map(str, row)) for row in result]
-        return patient_id
+    #def get_patient_id(self):
+    #    with connect() as connection:
+    #        cursor = connection.cursor()
+    #        cursor.execute("SELECT Id FROM patient")
+    #        result = cursor.fetchall()
+    #        patient_id = [" ".join(map(str, row)) for row in result]
+    #    return patient_id
    # def save_video_info(self, patient_id,video_name):
     #    with connect() as connection:
    #         cursor = connection.cursor()
@@ -47,10 +58,16 @@ class RecordAppScreen(Screen):
     def save_comment(self, comment):
         # Получаем текущую дату и время
         now = datetime.datetime.now()
+        number = get_current_number()
         date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
 
         # Создаем имя файла с текущей датой и временем
-        filename = f"videos/comments_{date_string}.txt"
+        user_data_dir = App.get_running_app().user_data_dir
+        # Создаем путь к папке с номером пользователя
+        user_folder_path = os.path.join(user_data_dir, str(number))
+        if not os.path.exists(user_folder_path):
+            os.makedirs(user_folder_path)
+        filename = os.path.join(user_folder_path, f"{number}_{date_string}.txt")
         with open(filename, 'a') as file:
             file.write(comment + '\n')
         print(f'Комментарий сохранен в файл {filename}')
@@ -84,14 +101,22 @@ class RecordAppScreen(Screen):
         file_chooser = FileChooserListView(path='.')
         popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
         def on_file_selected(instance, selection):
+            number = get_current_number()
             if selection:
                 selected_file = selection[0]
                 #print(f"Выбран файл: {selected_file}")
+
+                user_data_dir = App.get_running_app().user_data_dir
+                # Создаем путь к папке с номером пользователя
+                user_folder_path = os.path.join(user_data_dir, str(number))
+                now = datetime.datetime.now()
+                date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
+                filename = os.path.join(user_folder_path, f"{number}_{date_string}.avi")
                 target_folder = "upload_videos"
                 try:
-                    shutil.move(selected_file, target_folder)
+                    shutil.move(selected_file, filename)
                     #print(f"Файл успешно перемещен в {target_folder}")
-                    self.info_message = f"Файл успешно перемещен в {target_folder}"
+                    self.info_message = f"Файл успешно перемещен в {filename}"
                 except Exception as e:
                     #print(f"Ошибка при перемещении файла: {e}")
                     self.info_message = f"Ошибка при перемещении файла: {e}"

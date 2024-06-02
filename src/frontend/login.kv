@@ -2,22 +2,29 @@
     orientation: 'vertical'
     Label:
         text: root.error_message
+        size_hint_y: None
+        height: self.texture_size[1]
         color: [1, 0, 0, 1]  # Red color for error messages
     TextInput:
         id: username
+        font_size: '25sp'
         hint_text: 'Username'
     TextInput:
         id: password
+        font_size: '25sp'
         hint_text: 'Password'
         password: True
     Spinner:
         id: role
+        font_size: '25sp'
         text: 'Select user type'
         values: ['Patient', 'Doctor']
     Button:
+        font_size: '25sp'
         text: 'Login'
         on_press: root.login(username.text, password.text, role.text)
 
     Button:
+        font_size: '25sp'
         text: 'Back'
         on_press: app.root.current = 'welcome'

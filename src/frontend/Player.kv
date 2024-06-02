@@ -1,0 +1,27 @@
+<VideoPlayerApp>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: root.info_message
+            size_hint_y: None
+            height: self.texture_size[1]
+        #FileChooserListView:
+        #    id: filechooser
+        #    filters: ['*.mp4', '*.avi']
+
+        VideoPlayer:
+            id: video_player
+            allow_stretch: True
+        BoxLayout:
+            size_hint_y: None
+            height: '48dp'
+            Button:
+                text: 'Choose video'
+                on_press: root.play_video(self)
+            Button:
+                text: 'Delete video'
+                on_press: root.delete_video()
+        Button:
+            text: 'Back'
+            size_hint_y: 0.25
+            on_press: app.root.current = 'RecordApp'

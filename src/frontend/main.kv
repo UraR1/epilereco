@@ -3,17 +3,22 @@
     orientation: 'vertical'
     Label:
         id: welcome_label
+        font_size: '25sp'
         text: "Welcome, " + root.user_name
         #color: [1, 0, 0, 1]  # RGB and alpha: red text
     Button:
+        font_size: '25sp'
         text: 'Logout'
         on_press: app.root.current = 'login'
     Button:
+        font_size: '25sp'
         text: 'Add New Patient'
         on_press: app.root.current = 'new_patient'
     Button:
+        font_size: '25sp'
         text: 'Add Seizure Information'
         on_press: app.root.current = 'seizure_info'
     Button:
+        font_size: '25sp'
         text: 'View Seizure Statistics'
         on_press: app.root.current = 'seizure_stats'

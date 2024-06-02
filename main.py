@@ -10,6 +10,7 @@ from src.backend.doctor import DoctorScreen
 from src.backend.add_new_patient import AddNewPatientScreen
 from src.backend.main import MainScreen
 from src.backend.new_patient import NewPatientScreen
+from src.backend.Player import VideoPlayerApp
 from src.backend.welcome import WelcomeScreen
 from database.database import setup_db
 from kivy.lang import Builder
@@ -17,6 +18,7 @@ from kivy.properties import ObjectProperty
 
 # Load KV files
 Builder.load_file('src/frontend/login.kv')
+Builder.load_file('src/frontend/Player.kv')
 Builder.load_file('src/frontend/signup.kv')
 Builder.load_file('src/frontend/main.kv')
 Builder.load_file('src/frontend/welcome.kv')
@@ -98,9 +100,14 @@ class AddNewPatientScreenWrapper(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.add_widget(AddNewPatientScreen())
+class VideoPlayerAppWrapper(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_widget(VideoPlayerApp())
 
 
 class MainApp(App):
+    title = "Epilereco"
     def build(self):
         setup_db()
         sm = ScreenManager()
@@ -108,6 +115,7 @@ class MainApp(App):
         sm.add_widget(LoginScreenWrapper(name='login'))
         sm.add_widget(SignupScreenWrapper(name='signup'))
         sm.add_widget(MainWrapper(name='main'))
+        sm.add_widget(VideoPlayerAppWrapper(name='Player'))
         sm.add_widget(AddNewPatientScreenWrapper(name='add_new_patient'))
         sm.add_widget(PatientScreenWrapper(name='patient'))
         sm.add_widget(DoctorScreenWrapper(name='doctor'))

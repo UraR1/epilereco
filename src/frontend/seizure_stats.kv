@@ -10,6 +10,8 @@
             on_press: root.show_statistics(patient_name_input.text)
         Label:
             id: stats_label
+            size_hint_y: None
+            height: self.texture_size[1]
             text: root.text_label
         Button:
             text: 'Back'
