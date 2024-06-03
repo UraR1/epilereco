@@ -19,9 +19,18 @@ class RecordAppScreen(Screen):
     info_message = StringProperty("")
     image = Image()
     video_texture = ObjectProperty(None)
+    def __init__(self, **kwargs):
+        super(RecordAppScreen, self).__init__(**kwargs)
+        self.capture = None
+        self.out = None
+        self.recording = False
+
+        if platform == 'android':
+            from android.permissions import request_permissions, Permission
+            request_permissions([Permission.CAMERA, Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE])
+            #self.capture = cv2.VideoCapture(0, cv2.CAP_ANDROID)
     def start_recording(self, instance):
-        with connect() as connection:
-            cursor = connection.cursor()
+        with connect():
             number = get_current_number()
 
         self.recording = True
@@ -35,26 +44,15 @@ class RecordAppScreen(Screen):
         if not os.path.exists(user_folder_path):
             os.makedirs(user_folder_path)
         filename = os.path.join(user_folder_path, f"{number}_{date_string}.avi")
-        print(f'Папка "{filename}" успешно создана!')
+        #print(f'Папка "{filename}" успешно создана!')
         self.out = cv2.VideoWriter(filename, self.fourcc, 20.0, (640, 480))
         Clock.schedule_once(self.update, 1 / 30.)
+
         with connect() as connection:
             cursor = connection.cursor()
             number = get_current_number()
             cursor.execute("INSERT INTO video (number,video_name) VALUES (?, ?)", (number,date_string))
             connection.commit()
-    #def get_patient_id(self):
-    #    with connect() as connection:
-    #        cursor = connection.cursor()
-    #        cursor.execute("SELECT Id FROM patient")
-    #        result = cursor.fetchall()
-    #        patient_id = [" ".join(map(str, row)) for row in result]
-    #    return patient_id
-   # def save_video_info(self, patient_id,video_name):
-    #    with connect() as connection:
-   #         cursor = connection.cursor()
-    #        cursor.execute("INSERT INTO video (patient_id,video_name) VALUES (?, ?)", (patient_id,video_name))
-    #        connection.commit()
     def save_comment(self, comment):
         # Получаем текущую дату и время
         now = datetime.datetime.now()
@@ -70,11 +68,13 @@ class RecordAppScreen(Screen):
         filename = os.path.join(user_folder_path, f"{number}_{date_string}.txt")
         with open(filename, 'a') as file:
             file.write(comment + '\n')
-        print(f'Комментарий сохранен в файл {filename}')
+        #print(f'Комментарий сохранен в файл {filename}')
     def stop_recording(self, instance):
         self.recording = False
-        self.capture.release()
-        self.out.release()
+        if self.capture:
+            self.capture.release()
+        if self.out:
+            self.out.release()
         #self.save_comment()
         #cv2.destroyAllWindows()
 

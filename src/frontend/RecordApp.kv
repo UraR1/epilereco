@@ -6,10 +6,6 @@
             size_hint: None, None
             size: 800, 400
             texture: root.video_texture
-        #Spinner:
-        #    id: patient_id_input
-        #    text: 'Select Patient'
-        #    values: root.get_patient_id()
         Button:
             font_size: '25sp'
             text: 'Start recording'
@@ -19,7 +15,6 @@
             text: 'Stop recording'
             on_press: root.stop_recording(self)
             on_release: root.save_comment(comment_input.text)
-       #     om_release: root.save_video_info(patient_id)
         Label:
             size_hint_y: None
             height: self.texture_size[1]
