@@ -1,6 +1,7 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty
 from kivy.app import App
+import platform
 
 from database.database import validate_login_p, validate_login_d, set_current_user, get_current_user, set_current_number, get_current_number, set_current_number_d, get_current_number_d
 #from kivy.utils import platform
@@ -9,6 +10,7 @@ class LoginScreen(BoxLayout):
     error_message = StringProperty("")
 
     def login(self, username, password, role):
+        #print(platform)
         if role == 'Patient':
             if validate_login_p(username, password):
                 set_current_user(role)

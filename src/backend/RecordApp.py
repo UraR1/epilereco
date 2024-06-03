@@ -13,7 +13,6 @@ from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
 from kivy.app import App
 import platform
-
 #from kivy.utils import platform
 #from android import request_permissions, Permission
 
@@ -21,22 +20,21 @@ class RecordAppScreen(Screen):
     info_message = StringProperty("")
     image = Image()
     video_texture = ObjectProperty(None)
-    def __init__(self, **kwargs):
-        super(RecordAppScreen, self).__init__(**kwargs)
-        self.capture = None
-        self.out = None
-        self.recording = False
+    recording = False
 
-        if platform == 'android':
-            from android.permissions import request_permissions, Permission
-            request_permissions([Permission.CAMERA, Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE])
-            #self.capture = cv2.VideoCapture(0, cv2.CAP_ANDROID)
     def start_recording(self, instance):
+        self.recording = True
         with connect():
             number = get_current_number()
+        if platform == 'android':
+            # Запрос разрешений для Android
+            from android.permissions import request_permissions, Permission
+            request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE])
+            self.capture = cv2.VideoCapture(0, cv2.CAP_ANDROID)
+        else:
+            self.capture = cv2.VideoCapture(0)
 
-        self.recording = True
-        self.capture = cv2.VideoCapture(0)
+
         self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
         now = datetime.datetime.now()
         date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
@@ -77,6 +75,7 @@ class RecordAppScreen(Screen):
             self.capture.release()
         if self.out:
             self.out.release()
+        Clock.unschedule(self.update)
         #self.save_comment()
         #cv2.destroyAllWindows()
 
@@ -96,7 +95,7 @@ class RecordAppScreen(Screen):
                 # Display image from the texture
                 self.video_texture = image_texture
 
-            Clock.schedule_once(self.update, 1 / 30.)
+            #Clock.schedule_once(self.update, 1 / 30.)
 
     def upload_video(self, instance):
 
