@@ -28,7 +28,7 @@ class RecordAppScreen(Screen):
         if platform == 'android':
             from android.permissions import request_permissions, Permission
             request_permissions([Permission.CAMERA, Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE])
-            #self.capture = cv2.VideoCapture(0, cv2.CAP_ANDROID)
+            @self.capture = cv2.VideoCapture(0, cv2.CAP_ANDROID)
     def start_recording(self, instance):
         with connect():
             number = get_current_number()
