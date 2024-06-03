@@ -12,6 +12,8 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
 from kivy.app import App
+import platform
+
 #from kivy.utils import platform
 #from android import request_permissions, Permission
 
