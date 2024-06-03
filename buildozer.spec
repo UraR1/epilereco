@@ -28,7 +28,7 @@ source.dir = .
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+version = Offline
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -59,7 +59,7 @@ orientation = portrait
 #
 
 #
-# author = © Copyright Info
+ author = Reikhert © Copyright Info
 
 # change the major version of python used by the app
 osx.python_version = 3
