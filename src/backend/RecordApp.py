@@ -26,7 +26,8 @@ class RecordAppScreen(Screen):
         self.recording = True
         with connect():
             number = get_current_number()
-        if platform == 'android':
+        os_name = platform.system()
+        if os_name == 'Android':
             # Запрос разрешений для Android
             from android.permissions import request_permissions, Permission
             request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE])

@@ -10,7 +10,7 @@ class LoginScreen(BoxLayout):
     error_message = StringProperty("")
 
     def login(self, username, password, role):
-        #print(platform)
+        #print(platform.system())
         if role == 'Patient':
             if validate_login_p(username, password):
                 set_current_user(role)
