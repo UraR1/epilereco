@@ -10,6 +10,11 @@ class LoginScreen(BoxLayout):
     error_message = StringProperty("")
 
     def login(self, username, password, role):
+        os_name = platform.system()
+        if os_name == 'Linux':
+            # Запрос разрешений для Android
+            from android.permissions import request_permissions, Permission
+            request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET, Permission.READ_EXTERNAL_STORAGE])
         #print(platform.system())
         if role == 'Patient':
             if validate_login_p(username, password):
