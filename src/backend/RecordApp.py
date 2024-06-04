@@ -23,7 +23,6 @@ class LoadDialog(FloatLayout):
     cancel = ObjectProperty(None)
 class RecordAppScreen(Screen):
     info_message = StringProperty("")
-    image = Image()
     video_texture = ObjectProperty(None)
     recording = False
     loadfile = ObjectProperty(None)
