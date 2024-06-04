@@ -113,16 +113,26 @@ class RecordAppScreen(Screen):
         popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
         def on_file_selected(instance, selection):
             number = get_current_number()
+            os_name = platform.system()
             if selection:
                 selected_file = selection[0]
                 #print(f"Выбран файл: {selected_file}")
+                if os_name == 'Linux':
+                    user_data_dir = 'Android/obb'
+                    user_folder_path = os.path.join(user_data_dir, str(number))
+                    now = datetime.datetime.now()
+                    date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
+                    filename = os.path.join(user_folder_path, f"{number}_{date_string}.mp4")
 
-                user_data_dir = App.get_running_app().user_data_dir
+                else:
+                    user_data_dir = App.get_running_app().user_data_dir
                 # Создаем путь к папке с номером пользователя
-                user_folder_path = os.path.join(user_data_dir, str(number))
-                now = datetime.datetime.now()
-                date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
-                filename = os.path.join(user_folder_path, f"{number}_{date_string}.mp4")
+                    user_folder_path = os.path.join(user_data_dir, str(number))
+                    now = datetime.datetime.now()
+                    date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
+                    filename = os.path.join(user_folder_path, f"{number}_{date_string}.mp4")
+
+
                 try:
                     shutil.move(selected_file, filename)
                     #print(f"Файл успешно перемещен в {target_folder}")
