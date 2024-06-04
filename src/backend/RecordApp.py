@@ -36,7 +36,7 @@ class RecordAppScreen(Screen):
 
             # Определяем кодек и создаем объект VideoWriter
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
+            out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (640, 480))
 
             while (cap.isOpened()):
                 # Захватываем кадр за кадром
@@ -66,7 +66,7 @@ class RecordAppScreen(Screen):
             user_folder_path = os.path.join(user_data_dir, str(number))
             if not os.path.exists(user_folder_path):
                 os.makedirs(user_folder_path)
-            filename = os.path.join(user_folder_path, f"{number}_{date_string}.avi")
+            filename = os.path.join(user_folder_path, f"{number}_{date_string}.mp4")
             # print(f'Папка "{filename}" успешно создана!')
             self.out = cv2.VideoWriter(filename, self.fourcc, 20.0, (640, 480))
             Clock.schedule_once(self.update, 1 / 30.)
@@ -123,8 +123,7 @@ class RecordAppScreen(Screen):
                 user_folder_path = os.path.join(user_data_dir, str(number))
                 now = datetime.datetime.now()
                 date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
-                filename = os.path.join(user_folder_path, f"{number}_{date_string}.avi")
-                target_folder = "upload_videos"
+                filename = os.path.join(user_folder_path, f"{number}_{date_string}.mp4")
                 try:
                     shutil.move(selected_file, filename)
                     #print(f"Файл успешно перемещен в {target_folder}")
