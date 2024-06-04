@@ -13,15 +13,29 @@ from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
 from kivy.app import App
 import platform
+from kivy.uix.floatlayout import FloatLayout
 #from kivy.utils import platform
 #from android import request_permissions, Permission
-
+class LoadDialog(FloatLayout):
+    load = ObjectProperty(None)
+    cancel = ObjectProperty(None)
 class RecordAppScreen(Screen):
     info_message = StringProperty("")
     image = Image()
     video_texture = ObjectProperty(None)
     recording = False
-
+    loadfile = ObjectProperty(None)
+    def test(self,instance):
+        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
+        self._popup = Popup(title="Выберите файл", content=content,
+                            size_hint=(0.9, 0.9))
+        self._popup.open()
+    def load(self, path, filename):
+        # Здесь вы можете добавить код для обработки выбранного файла
+        print("Выбран файл:", filename)
+        self.dismiss_popup()
+    def dismiss_popup(self):
+        self._popup.dismiss()
     def start_recording(self, instance):
         self.recording = True
         with connect():
