@@ -27,7 +27,7 @@ class RecordAppScreen(Screen):
         with connect():
             number = get_current_number()
         os_name = platform.system()
-        self.info_message = os_name
+        #self.info_message = os_name
         if os_name == 'Linux':
             try:
             # Запрос разрешений для Android
