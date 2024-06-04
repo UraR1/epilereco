@@ -50,12 +50,19 @@ class VideoPlayerApp(Screen):
             #if self.ids.filechooser.selection:
             #    selected = self.ids.filechooser.selection[0]
             filename = os.path.basename(selected)
-            if filename.startswith(valid_name):
+            os_name = platform.system()
+            # self.info_message = os_name
+            if os_name == 'Windows':
+                if filename.startswith(valid_name):
+                    self.ids.video_player.source = selected
+                    self.ids.video_player.state = 'play'
+                    self.info_message = ''
+                else:
+                    self.info_message = 'Choose YOUR video'
+            else:
                 self.ids.video_player.source = selected
                 self.ids.video_player.state = 'play'
                 self.info_message = ''
-            else:
-                self.info_message = 'Choose YOUR video'
         self.popup.dismiss()
     #file_chooser.bind(selection=on_file_selected)
         self.popup.open()
