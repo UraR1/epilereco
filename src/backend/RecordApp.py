@@ -13,7 +13,6 @@ from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
 from kivy.app import App
 import platform
-from kivy_garden.xcamera import XCamera
 #from kivy.utils import platform
 #from android import request_permissions, Permission
 
@@ -33,7 +32,7 @@ class RecordAppScreen(Screen):
             # Запрос разрешений для Android
             from android.permissions import request_permissions, Permission
             request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET, Permission.READ_EXTERNAL_STORAGE])
-            self.capture = XCamera()  # Используйте XCamera вместо cv2.VideoCapture
+            self.capture = cv2.VideoCapture(0)
         else:
             self.capture = cv2.VideoCapture(0)
 
