@@ -7,6 +7,7 @@ from kivy.properties import StringProperty, ObjectProperty
 import os
 from kivy.app import App
 from kivy.uix.popup import Popup
+import platform
 #from jnius import autoclass
 
 
@@ -16,11 +17,22 @@ class VideoPlayerApp(Screen):
 
 
     def play_video(self, instance):
-        with connect():
-            number = get_current_number()
-        user_data_dir = App.get_running_app().user_data_dir
-        user_folder_path = os.path.join(user_data_dir, str(number))
-        file_chooser = FileChooserListView(path=user_folder_path)
+        os_name = platform.system()
+        # self.info_message = os_name
+        if os_name == 'Linux':
+            from plyer import filechooser
+            path = filechooser.open_file(title="Выберите видео")[0]
+            file_chooser = FileChooserListView(path=path)
+        else:
+            with connect():
+                number = get_current_number()
+            user_data_dir = App.get_running_app().user_data_dir
+            user_folder_path = os.path.join(user_data_dir, str(number))
+            file_chooser = FileChooserListView(path=user_folder_path)
+
+
+
+
         popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
         valid_name = number
         #self.vid = VideoPlayer(source='video.mp4', state='play')
