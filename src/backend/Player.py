@@ -7,6 +7,7 @@ from kivy.properties import StringProperty, ObjectProperty
 import os
 from kivy.app import App
 from kivy.uix.popup import Popup
+from jnius import autoclass
 
 
 class VideoPlayerApp(Screen):
@@ -14,7 +15,6 @@ class VideoPlayerApp(Screen):
 
 
 
-    MyVideo().run()
     def play_video(self, instance):
         with connect():
             number = get_current_number()
@@ -23,7 +23,7 @@ class VideoPlayerApp(Screen):
         file_chooser = FileChooserListView(path=user_folder_path)
         popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
         valid_name = number
-        self.vid = VideoPlayer(source='video.mp4', state='play')
+        #self.vid = VideoPlayer(source='video.mp4', state='play')
 
         def on_file_selected(instance, selection):
             if selection:
@@ -41,7 +41,7 @@ class VideoPlayerApp(Screen):
         file_chooser.bind(selection=on_file_selected)
         popup.open()
 
-        return self.vid
+        #return self.vid
     def delete_video(self):
         with connect():
             number = get_current_number()

@@ -14,6 +14,7 @@ from src.backend.Player import VideoPlayerApp
 from src.backend.welcome import WelcomeScreen
 from database.database import setup_db
 from kivy.lang import Builder
+from kivy.uix.videoplayer import VideoPlayer
 from kivy.properties import ObjectProperty
 
 # Load KV files
@@ -123,6 +124,8 @@ class MainApp(App):
         sm.add_widget(SeizureInfoScreen(name='seizure_info'))
         sm.add_widget(SeizureStatsScreen(name='seizure_stats'))
         sm.add_widget(RecordAppScreen(name='RecordApp'))
+
+
         return sm
 
 
