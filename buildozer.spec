@@ -219,7 +219,7 @@ android.permissions = READ_EXTERNAL_STORAGE, CAMERA, WRITE_EXTERNAL_STORAGE, INT
 #android.uses_library =
 
 # (str) Android logcat filters to use
-#android.logcat_filters = *:S python:D
+android.logcat_filters = *:S python:D
 
 # (str) Android additional adb arguments
 #android.adb_args = -H host.docker.internal
