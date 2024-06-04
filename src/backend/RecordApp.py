@@ -12,6 +12,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
 from kivy.app import App
+
 import platform
 
 from kivy.uix.floatlayout import FloatLayout
@@ -131,8 +132,9 @@ class RecordAppScreen(Screen):
         os_name = platform.system()
         # self.info_message = os_name
         if os_name == 'Linux':
-            from android.os import Environment
-            file_chooser = FileChooserListView(path=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString())
+            from plyer import filechooser
+            path = filechooser.open_file(title="Выберите видео")[0]
+            file_chooser = FileChooserListView(path=path)
         else:
 
             file_chooser = FileChooserListView(path='.')
