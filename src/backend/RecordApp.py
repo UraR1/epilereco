@@ -13,6 +13,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
 from kivy.app import App
 import platform
+from kivy_garden.xcamera import XCamera
 #from kivy.utils import platform
 #from android import request_permissions, Permission
 
@@ -31,8 +32,8 @@ class RecordAppScreen(Screen):
         if os_name == 'Linux':
             # Запрос разрешений для Android
             from android.permissions import request_permissions, Permission
-            request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE])
-            self.capture = cv2.VideoCapture(0, cv2.CAP_ANDROID)
+            request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET, Permission.READ_EXTERNAL_STORAGE])
+            self.capture = XCamera()  # Используйте XCamera вместо cv2.VideoCapture
         else:
             self.capture = cv2.VideoCapture(0)
 
@@ -55,22 +56,7 @@ class RecordAppScreen(Screen):
             number = get_current_number()
             cursor.execute("INSERT INTO video (number,video_name) VALUES (?, ?)", (number,date_string))
             connection.commit()
-    def save_comment(self, comment):
-        # Получаем текущую дату и время
-        now = datetime.datetime.now()
-        number = get_current_number()
-        date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
 
-        # Создаем имя файла с текущей датой и временем
-        user_data_dir = App.get_running_app().user_data_dir
-        # Создаем путь к папке с номером пользователя
-        user_folder_path = os.path.join(user_data_dir, str(number))
-        if not os.path.exists(user_folder_path):
-            os.makedirs(user_folder_path)
-        filename = os.path.join(user_folder_path, f"{number}_{date_string}.txt")
-        with open(filename, 'a') as file:
-            file.write(comment + '\n')
-        #print(f'Комментарий сохранен в файл {filename}')
     def stop_recording(self, instance):
         self.recording = False
         if self.capture:
@@ -97,7 +83,7 @@ class RecordAppScreen(Screen):
                 # Display image from the texture
                 self.video_texture = image_texture
 
-            #Clock.schedule_once(self.update, 1 / 30.)
+            Clock.schedule_once(self.update, 1 / 30.)
 
     def upload_video(self, instance):
 
@@ -127,3 +113,19 @@ class RecordAppScreen(Screen):
         file_chooser.bind(selection=on_file_selected)
         popup.open()
         #ошибка файл уже создан, сделать так, чтобы файл менял название в зависимости от пользователя из бд
+    def save_comment(self, comment):
+        # Получаем текущую дату и время
+        now = datetime.datetime.now()
+        number = get_current_number()
+        date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
+
+        # Создаем имя файла с текущей датой и временем
+        user_data_dir = App.get_running_app().user_data_dir
+        # Создаем путь к папке с номером пользователя
+        user_folder_path = os.path.join(user_data_dir, str(number))
+        if not os.path.exists(user_folder_path):
+            os.makedirs(user_folder_path)
+        filename = os.path.join(user_folder_path, f"{number}_{date_string}.txt")
+        with open(filename, 'a') as file:
+            file.write(comment + '\n')
+        #print(f'Комментарий сохранен в файл {filename}')

@@ -88,7 +88,7 @@ fullscreen = 0
 #android.presplash_lottie = "path/to/lottie/file.json"
 
 # (list) Permissions
-android.permissions = READ_EXTERNAL_STORAGE, CAMERA, WRITE_EXTERNAL_STORAGE
+android.permissions = READ_EXTERNAL_STORAGE, CAMERA, WRITE_EXTERNAL_STORAGE, INTERNET
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
