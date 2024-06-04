@@ -1,5 +1,7 @@
 [app]
 
+garden_requirements = xcamera
+
 # (str) Title of your application
 title = Epilereco
 
@@ -36,7 +38,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.3.0, opencv, kivy_garden.graph, kivy_garden.xcamera
+requirements = python3,kivy==2.3.0, opencv, kivy_garden.graph, kivy_garden.xcamera, kivy_garden
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
