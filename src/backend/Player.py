@@ -7,7 +7,7 @@ from kivy.properties import StringProperty, ObjectProperty
 import os
 from kivy.app import App
 from kivy.uix.popup import Popup
-from jnius import autoclass
+#from jnius import autoclass
 
 
 class VideoPlayerApp(Screen):
