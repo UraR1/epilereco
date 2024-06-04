@@ -21,8 +21,14 @@ class VideoPlayerApp(Screen):
         # self.info_message = os_name
         if os_name == 'Linux':
             from plyer import filechooser
-            path = filechooser.open_file(title="Выберите видео")[0]
-            file_chooser = FileChooserListView(path=path)
+            file_path_tuple = filechooser.open_file(title="Выберите видео")
+            if file_path_tuple:
+                path = file_path_tuple[0]
+                file_chooser = FileChooserListView(path=path)
+            else:
+                self.info_message = 'Файл не выбран'
+                return
+
         else:
             with connect():
                 number = get_current_number()
