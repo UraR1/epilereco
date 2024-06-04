@@ -29,32 +29,37 @@ class RecordAppScreen(Screen):
         os_name = platform.system()
         self.info_message = os_name
         if os_name == 'Linux':
+            try:
             # Запрос разрешений для Android
-            from android.permissions import request_permissions, Permission
-            request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET, Permission.READ_EXTERNAL_STORAGE])
-            cap = cv2.VideoCapture(0)
+                from android.permissions import request_permissions, Permission
+                request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET, Permission.READ_EXTERNAL_STORAGE])
+                cap = cv2.VideoCapture(0)
 
             # Определяем кодек и создаем объект VideoWriter
-            fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (640, 480))
+                fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (640, 480))
 
-            while (cap.isOpened()):
-                # Захватываем кадр за кадром
-                ret, frame = cap.read()
-                if ret == True:
-                    # Записываем кадр в файл
-                    out.write(frame)
+                while (cap.isOpened()):
+                    # Захватываем кадр за кадром
+                    ret, frame = cap.read()
+                    if ret == True:
+                        # Записываем кадр в файл
+                        out.write(frame)
 
-                    # Отображаем кадр
-                    cv2.imshow('frame', frame)
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        # Отображаем кадр
+                        cv2.imshow('frame', frame)
+                        if cv2.waitKey(1) & 0xFF == ord('q'):
+                            break
+                    else:
                         break
-                else:
-                    break
 
             # Освобождаем все ресурсы
-            cap.release()
-            out.release()
+                cap.release()
+                out.release()
+            except Exception as e:
+                #print(f"Ошибка при перемещении файла: {e}")
+                self.info_message = f"{e}"
+
         else:
             self.capture = cv2.VideoCapture(0)
             self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -118,6 +123,7 @@ class RecordAppScreen(Screen):
                 selected_file = selection[0]
                 #print(f"Выбран файл: {selected_file}")
                 if os_name == 'Linux':
+
                     user_data_dir = '/Android/obb'
                     user_folder_path = os.path.join(user_data_dir, str(number))
                     now = datetime.datetime.now()
