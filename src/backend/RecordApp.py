@@ -55,7 +55,6 @@ class RecordAppScreen(Screen):
             # Освобождаем все ресурсы
             cap.release()
             out.release()
-            cv2.destroyAllWindows()
         else:
             self.capture = cv2.VideoCapture(0)
             self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
