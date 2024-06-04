@@ -13,6 +13,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
 from kivy.app import App
 import platform
+
 from kivy.uix.floatlayout import FloatLayout
 #from kivy.utils import platform
 #from android import request_permissions, Permission
@@ -127,8 +128,14 @@ class RecordAppScreen(Screen):
             Clock.schedule_once(self.update, 1 / 30.)
 
     def upload_video(self, instance):
+        os_name = platform.system()
+        # self.info_message = os_name
+        if os_name == 'Linux':
+            from android.os import Environment
+            file_chooser = FileChooserListView(path=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString())
+        else:
 
-        file_chooser = FileChooserListView(path='.')
+            file_chooser = FileChooserListView(path='.')
         popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
         def on_file_selected(instance, selection):
             number = get_current_number()
