@@ -118,7 +118,7 @@ class RecordAppScreen(Screen):
                 selected_file = selection[0]
                 #print(f"Выбран файл: {selected_file}")
                 if os_name == 'Linux':
-                    user_data_dir = 'Android/obb'
+                    user_data_dir = '/Android/obb'
                     user_folder_path = os.path.join(user_data_dir, str(number))
                     now = datetime.datetime.now()
                     date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
@@ -139,7 +139,7 @@ class RecordAppScreen(Screen):
                     self.info_message = f"Файл успешно перемещен в {filename}"
                 except Exception as e:
                     #print(f"Ошибка при перемещении файла: {e}")
-                    self.info_message = f"Ошибка при перемещении файла: {e}"
+                    self.info_message = f"{e}"
             popup.dismiss()
         file_chooser.bind(selection=on_file_selected)
         popup.open()
