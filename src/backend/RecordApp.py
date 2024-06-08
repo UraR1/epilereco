@@ -1,7 +1,7 @@
 
 import os
 import shutil
-from kivy.uix.filechooser import FileChooserListView
+from kivy.uix.filechooser import FileChooserListView, FileChooserIconView
 from kivy.uix.popup import Popup
 import cv2
 import datetime
@@ -12,31 +12,17 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty, ObjectProperty
 from database.database import connect, get_current_number
 from kivy.app import App
-
 import platform
-
 from kivy.uix.floatlayout import FloatLayout
-#from kivy.utils import platform
-#from android import request_permissions, Permission
-class LoadDialog(FloatLayout):
-    load = ObjectProperty(None)
-    cancel = ObjectProperty(None)
+
+
 class RecordAppScreen(Screen):
     info_message = StringProperty("")
     video_texture = ObjectProperty(None)
     recording = False
     loadfile = ObjectProperty(None)
-    def test(self,instance):
-        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Выберите файл", content=content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
-    def load(self, path, filename):
-        # Здесь вы можете добавить код для обработки выбранного файла
-        print("Выбран файл:", filename)
-        self.dismiss_popup()
-    def dismiss_popup(self):
-        self._popup.dismiss()
+
+
     def start_recording(self, instance):
         self.recording = True
         with connect():
@@ -49,142 +35,116 @@ class RecordAppScreen(Screen):
                 from android.permissions import request_permissions, Permission
                 request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET, Permission.READ_EXTERNAL_STORAGE])
                 cap = cv2.VideoCapture(0)
-
             # Определяем кодек и создаем объект VideoWriter
                 fourcc = cv2.VideoWriter_fourcc(*'XVID')
                 out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (640, 480))
-
                 while (cap.isOpened()):
-                    # Захватываем кадр за кадром
                     ret, frame = cap.read()
                     if ret == True:
-                        # Записываем кадр в файл
                         out.write(frame)
-
-                        # Отображаем кадр
-                        cv2.imshow('frame', frame)
+                        cv2.imshow('frame', frame) #check imshow
                         if cv2.waitKey(1) & 0xFF == ord('q'):
                             break
                     else:
                         break
-
             # Освобождаем все ресурсы
                 cap.release()
                 out.release()
             except Exception as e:
-                #print(f"Ошибка при перемещении файла: {e}")
                 self.info_message = f"{e}"
-
         else:
             self.capture = cv2.VideoCapture(0)
-            self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            self.fourcc = cv2.VideoWriter_fourcc(*'XVID') # H264
             now = datetime.datetime.now()
-            date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
+            date_string = now.strftime("%Y-%m-%d_%H-%M-%S")
             user_data_dir = App.get_running_app().user_data_dir
             # Создаем путь к папке с номером пользователя
             user_folder_path = os.path.join(user_data_dir, str(number))
             if not os.path.exists(user_folder_path):
                 os.makedirs(user_folder_path)
-            filename = os.path.join(user_folder_path, f"{number}_{date_string}.mp4")
-            # print(f'Папка "{filename}" успешно создана!')
+            filename = os.path.join(user_folder_path, f"{number}_{date_string}.avi") #try MP4V
             self.out = cv2.VideoWriter(filename, self.fourcc, 20.0, (640, 480))
             Clock.schedule_once(self.update, 1 / 30.)
-
             with connect() as connection:
                 cursor = connection.cursor()
                 number = get_current_number()
                 cursor.execute("INSERT INTO video (number,video_name) VALUES (?, ?)", (number, date_string))
                 connection.commit()
-
-
-
-
     def stop_recording(self, instance):
-        self.recording = False
-        if self.capture:
-            self.capture.release()
-        if self.out:
-            self.out.release()
-        Clock.unschedule(self.update)
-        #self.save_comment()
-        #cv2.destroyAllWindows()
+        try:
+            self.recording = False
+            if self.capture:
+                self.capture.release()
+            if self.out:
+                self.out.release()
+            Clock.unschedule(self.update)
+            self.info_message = "Video stopped"
+        except:
+            self.info_message = "Run video first"
 
     def update(self, dt):
         if self.recording:
             ret, frame = self.capture.read()
             if ret:
-                # Save frame to video file
                 self.out.write(frame)
-
-                # Convert the frame to texture
                 buf1 = cv2.flip(frame, 0)
                 buf = buf1.tostring()
                 image_texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
                 image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-
-                # Display image from the texture
                 self.video_texture = image_texture
-
             Clock.schedule_once(self.update, 1 / 30.)
-
     def upload_video(self, instance):
         os_name = platform.system()
         # self.info_message = os_name
         if os_name == 'Linux':
             from plyer import filechooser
-            path = filechooser.open_file(title="Выберите видео")[0]
-            file_chooser = FileChooserListView(path=path)
+            with connect():
+                number = get_current_number()
+            user_data_dir = App.get_running_app().user_data_dir
+            user_folder_path = os.path.join(user_data_dir, str(number))
+            file_chooser = FileChooserListView(path=user_folder_path, filters=(('*.avi'), ('*.mp4')))
+            #path = filechooser.open_file(title="Выберите видео",size_hint=(0.8, 0.8))#, filters=[('*.avi','*.mp4')])[0] #
+            #file_chooser = FileChooserListView(path=path)
         else:
-
-            file_chooser = FileChooserListView(path='.')
-        popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
+            with connect():
+                number = get_current_number()
+            user_data_dir = App.get_running_app().user_data_dir
+            user_folder_path = os.path.join(user_data_dir, str(number))
+            file_chooser = FileChooserListView(path=user_folder_path , filters=(('*.avi'),('*.mp4')))
+        popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8), )
         def on_file_selected(instance, selection):
             number = get_current_number()
             os_name = platform.system()
             if selection:
                 selected_file = selection[0]
-                #print(f"Выбран файл: {selected_file}")
                 if os_name == 'Linux':
-
-                    user_data_dir = '/Android/obb'
+                    user_data_dir = '.'
                     user_folder_path = os.path.join(user_data_dir, str(number))
                     now = datetime.datetime.now()
-                    date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
-                    filename = os.path.join(user_folder_path, f"{number}_{date_string}.mp4")
-
+                    date_string = now.strftime("%Y-%m-%d_%H-%M-%S")
+                    filename = os.path.join(user_folder_path, f"{number}_{date_string}.avi")
                 else:
                     user_data_dir = App.get_running_app().user_data_dir
-                # Создаем путь к папке с номером пользователя
                     user_folder_path = os.path.join(user_data_dir, str(number))
                     now = datetime.datetime.now()
-                    date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
-                    filename = os.path.join(user_folder_path, f"{number}_{date_string}.mp4")
-
-
+                    date_string = now.strftime("%Y-%m-%d_%H-%M-%S")
+                    filename = os.path.join(user_folder_path, f"{number}_{date_string}.avi")
                 try:
                     shutil.move(selected_file, filename)
-                    #print(f"Файл успешно перемещен в {target_folder}")
-                    self.info_message = f"Файл успешно перемещен в {filename}"
+                    self.info_message = f"Файл успешно перемещен \n {filename}"
                 except Exception as e:
-                    #print(f"Ошибка при перемещении файла: {e}")
                     self.info_message = f"{e}"
             popup.dismiss()
         file_chooser.bind(selection=on_file_selected)
         popup.open()
-        #ошибка файл уже создан, сделать так, чтобы файл менял название в зависимости от пользователя из бд
     def save_comment(self, comment):
-        # Получаем текущую дату и время
         now = datetime.datetime.now()
         number = get_current_number()
-        date_string = now.strftime("%Y-%m-%d_%H-%M-%S")  # Формат: ГГГГ-ММ-ДД_ЧЧ-ММ-СС
-
-        # Создаем имя файла с текущей датой и временем
+        date_string = now.strftime("%Y-%m-%d_%H-%M-%S")
         user_data_dir = App.get_running_app().user_data_dir
-        # Создаем путь к папке с номером пользователя
         user_folder_path = os.path.join(user_data_dir, str(number))
         if not os.path.exists(user_folder_path):
             os.makedirs(user_folder_path)
         filename = os.path.join(user_folder_path, f"{number}_{date_string}.txt")
         with open(filename, 'a') as file:
             file.write(comment + '\n')
-        #print(f'Комментарий сохранен в файл {filename}')

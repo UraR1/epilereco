@@ -47,11 +47,8 @@ class VideoPlayerApp(Screen):
             with connect():
                 number = get_current_number()
             valid_name = number
-            #if self.ids.filechooser.selection:
-            #    selected = self.ids.filechooser.selection[0]
             filename = os.path.basename(selected)
             os_name = platform.system()
-            # self.info_message = os_name
             if os_name == 'Windows':
                 if filename.startswith(valid_name):
                     self.ids.video_player.source = selected
@@ -64,7 +61,6 @@ class VideoPlayerApp(Screen):
                 self.ids.video_player.state = 'play'
                 self.info_message = ''
         self.popup.dismiss()
-    #file_chooser.bind(selection=on_file_selected)
         self.popup.open()
     def setup_file_chooser_for_other_os(self):
         with connect():
@@ -72,40 +68,24 @@ class VideoPlayerApp(Screen):
         user_data_dir = App.get_running_app().user_data_dir
         user_folder_path = os.path.join(user_data_dir, str(number))
         self.setup_file_chooser(user_folder_path)
-            #file_chooser = FileChooserListView(path=user_folder_path)
-
-
-
-
-    #popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
-    #
-        #self.vid = VideoPlayer(source='video.mp4', state='play')
-
-
-
-        #return self.vid
     def delete_video(self):
         with connect():
             number = get_current_number()
         valid_name = number
         user_data_dir = App.get_running_app().user_data_dir
         user_folder_path = os.path.join(user_data_dir, str(number))
-        file_chooser = FileChooserListView(path=user_folder_path)
+        file_chooser = FileChooserListView(path=user_folder_path, filters=(('*.avi'), ('*.mp4')))
         popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
         def on_file_selected(instance, selection):
             if selection:
                 selected = selection[0]
                 filename = os.path.basename(selected)
                 if filename.startswith(valid_name):
-        #if self.ids.filechooser.selection:
-            #selected = self.ids.filechooser.selection[0]
                     try:
                         os.remove(selected)
                         from kivy.clock import Clock
                         Clock.schedule_once(lambda dt: file_chooser._update_files(), -1)
-                        #self.ids.filechooser._update_files()  # Обновите список файлов после удаления
                     except OSError as e:
-                        #print(f"Ошибка: {e}")
                         self.info_message= 'Error'
                 else:
                     self.info_message = 'Choose YOUR video'

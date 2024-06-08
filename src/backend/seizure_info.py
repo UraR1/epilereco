@@ -21,18 +21,21 @@ class SeizureInfoScreen(Screen):
             #if patient_name != "Select Patient":
                 if is_valid_date_seconds(seizure_start):
                     if is_number(seizure_duration):
-                        self.info_message = "Success!"
-                        cursor = connection.cursor()
-                        number = get_current_number()
-                        cursor.execute(
-                            '''SELECT name, surname, patronymic, birth_date FROM patient WHERE number = ? ''',
-                            (number,))
-                        result = cursor.fetchall()
-                        for row in result:
-                            name, surname, patronymic, birth_date = row
-                        patient_name = f"{name} {surname} {patronymic} ({birth_date})"
-                        cursor.execute("INSERT INTO seizure (number, seizure_start, seizure_duration, seizure_type, patient_name) VALUES (?, ?, ?, ?, ?)", (number, seizure_start, seizure_duration, seizure_type, patient_name))
-                        connection.commit()
+                        try:
+                            self.info_message = "Success!"
+                            cursor = connection.cursor()
+                            number = get_current_number()
+                            cursor.execute(
+                                '''SELECT name, surname, patronymic, birth_date FROM patient WHERE number = ? ''',
+                                (number,))
+                            result = cursor.fetchall()
+                            for row in result:
+                                name, surname, patronymic, birth_date = row
+                            patient_name = f"{name} {surname} {patronymic} ({birth_date})"
+                            cursor.execute("INSERT INTO seizure (number, seizure_start, seizure_duration, seizure_type, patient_name) VALUES (?, ?, ?, ?, ?)", (number, seizure_start, seizure_duration, seizure_type, patient_name))
+                            connection.commit()
+                        except:
+                            self.info_message = "No patient data"
                     else:
                         self.info_message = "Invalid Duration"
                 else:

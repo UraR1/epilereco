@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+import re
 
 import cv2
 
@@ -16,6 +17,7 @@ def setup_db():
         cursor.execute('''CREATE TABLE IF NOT EXISTS user_d (id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT, number TEXT)''')
         cursor.execute('''CREATE TABLE IF NOT EXISTS seizure (id INTEGER PRIMARY KEY, number INTEGER, patient_name TEXT, seizure_start DATE, seizure_duration INTEGER, seizure_type TEXT)''')
         cursor.execute('''CREATE TABLE IF NOT EXISTS video (number TEXT, video_name TEXT)''')
+        connection.commit()
         #cursor.execute('''CREATE TABLE IF NOT EXISTS doctor_list (id INTEGER PRIMARY KEY, number TEXT, number_p TEXT)''')
         #cursor.execute('''DROP TABLE patient''')
         #cursor.execute('''DROP TABLE user_p''')
@@ -25,12 +27,14 @@ def setup_db():
         #cursor.execute('''DROP TABLE doctor_list''')
         #cursor.execute('''DROP TABLE doctor''')
         # ... Additional table creation here
-        connection.commit()
+
 def set_current_user(role):
     global current_user
     current_user = role
 def get_current_user():
     return current_user
+def is_only_letters(input_string):
+    return bool(re.fullmatch(r'[A-Za-zА-Яа-я]+', input_string))
 def set_current_number(username):
     with connect() as connection:
         cursor = connection.cursor()
@@ -45,7 +49,8 @@ def set_current_number_d(username):
         number = cursor.fetchone()
         global current_number_d
         current_number_d = str(number[0])
-
+def is_login_valid(login):
+    return bool(login and login.strip())
 def get_current_number():
     return current_number
 def get_current_number_d():
@@ -151,14 +156,3 @@ def update(self, dt):
     if self.recording:
         ret, frame = self.capture.read()
         self.out.write(frame)
-#def is_surname_available(surname, name: str) -> bool:
-#    with connect() as connection:
-#        cursor = connection.cursor()
-#        cursor.execute("SELECT surname FROM patient WHERE name = ?, surname = ?", (name, surname,))
-#        return cursor.fetchone() is None
-
-#def is_fathername_available(fathername: str) -> bool:
-#    with connect() as connection:
-#        cursor = connection.cursor()
-#        cursor.execute("SELECT fathername FROM patient WHERE fathername = ?", (fathername,))
-#        return cursor.fetchone() is None
