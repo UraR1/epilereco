@@ -32,9 +32,6 @@ class RecordAppScreen(Screen):
         #self.info_message = os_name
             if os_name == 'Linux':
                 try:
-            # Запрос разрешений для Android
-                    from android.permissions import request_permissions, Permission
-                    request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET, Permission.READ_EXTERNAL_STORAGE])
                     cap = cv2.VideoCapture(0)
             # Определяем кодек и создаем объект VideoWriter
                     fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -55,7 +52,7 @@ class RecordAppScreen(Screen):
                     self.info_message = f"{e}"
             else:
                 self.capture = cv2.VideoCapture(0)
-                self.fourcc = cv2.VideoWriter_fourcc(*'H264') # H264
+                self.fourcc = cv2.VideoWriter_fourcc(*'XVID') # H264 XVID
                 now = datetime.datetime.now()
                 date_string = now.strftime("%Y-%m-%d_%H-%M-%S")
                 user_data_dir = App.get_running_app().user_data_dir
