@@ -32,7 +32,7 @@ class RecordAppScreen(Screen):
         #self.info_message = os_name
             if os_name == 'Linux':
                 try:
-                    cap = cv2.VideoCapture(0)
+                    cap = cv2.VideoCapture(0,cv2.CAP_ANDROID)
             # Определяем кодек и создаем объект VideoWriter
                     fourcc = cv2.VideoWriter_fourcc(*'XVID')
                     out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (640, 480))
