@@ -105,13 +105,8 @@ class RecordAppScreen(Screen):
         # self.info_message = os_name
         if os_name == 'Linux':
             from plyer import filechooser
-            with connect():
-                number = get_current_number()
-            user_data_dir = App.get_running_app().user_data_dir
-            user_folder_path = os.path.join(user_data_dir, str(number))
-            file_chooser = FileChooserListView(path=user_folder_path, filters=(('*.avi'), ('*.mp4')))
-            #path = filechooser.open_file(title="Выберите видео",size_hint=(0.8, 0.8))#, filters=[('*.avi','*.mp4')])[0] #
-            #file_chooser = FileChooserListView(path=path)
+            path = filechooser.open_file(title="Выберите видео",size_hint=(0.8, 0.8))#, filters=[('*.avi','*.mp4')])[0] #
+            file_chooser = FileChooserListView(path=path)
         else:
             with connect():
                 number = get_current_number()
