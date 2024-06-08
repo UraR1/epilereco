@@ -26,13 +26,39 @@ class VideoPlayerApp(Screen):
                     number = get_current_number()
                 user_data_dir = App.get_running_app().user_data_dir
                 user_folder_path = os.path.join(user_data_dir, str(number))
-                self.setup_file_chooser(user_folder_path)
+                file_chooser = FileChooserListView(path=user_folder_path, filters=(('*.avi'), ('*.mp4')))
+                self.popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
+
+                try:
+                    if selection:
+                        selected = selection[0]
+                        with connect():
+                            number = get_current_number()
+                        valid_name = number
+                        filename = os.path.basename(selected)
+                        os_name = platform.system()
+                        if os_name == 'Windows':
+                            if filename.startswith(valid_name):
+                                self.ids.video_player.source = selected
+                                self.ids.video_player.state = 'play'
+                                self.info_message = ''
+                            else:
+                                self.info_message = 'Choose YOUR video'
+                        else:
+                            self.ids.video_player.source = selected
+                            self.ids.video_player.state = 'play'
+                            self.info_message = ''
+                    self.popup.dismiss()
+                    self.popup.open()
+                except:
+                    self.info_message = "On file selected"
+
             else:
                 self.setup_file_chooser_for_other_os()
-        except Exception as e:
-            self.info_message = f"{e}"
+        except:
+            self.info_message = "Play Video"
 
-   # @mainthread
+    @mainthread
     def handle_selected_file(self, selection):
         if selection:
             path = selection[0]
