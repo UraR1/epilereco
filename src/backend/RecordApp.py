@@ -54,7 +54,7 @@ class RecordAppScreen(Screen):
                 self.info_message = f"{e}"
         else:
             self.capture = cv2.VideoCapture(0)
-            self.fourcc = cv2.VideoWriter_fourcc(*'XVID') # H264
+            self.fourcc = cv2.VideoWriter_fourcc(*'H264') # H264
             now = datetime.datetime.now()
             date_string = now.strftime("%Y-%m-%d_%H-%M-%S")
             user_data_dir = App.get_running_app().user_data_dir
