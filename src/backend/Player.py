@@ -23,8 +23,24 @@ class VideoPlayerApp(Screen):
             os_name = platform.system()
         # self.info_message = os_name
             if os_name == 'Linux':
-                from plyer import filechooser
-                filechooser.open_file(title="Выберите видео", on_selection=self.handle_selected_file)
+                #from plyer import filechooser
+                #filechooser.open_file(title="Выберите видео", on_selection=self.handle_selected_file)
+                user_data_dir = App.get_running_app().user_data_dir
+                user_folder_path = os.path.join(user_data_dir, str(number))
+                file_chooser = FileChooserListView(path=user_folder_path, filters=(('*.avi'), ('*.mp4')))
+                popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
+
+                def on_file_selected(instance, selection):
+                    if selection:
+                        selected = selection[0]
+                        filename = os.path.basename(selected)
+                        self.ids.video_player.source = selected
+                        self.ids.video_player.state = 'play'
+                        self.info_message = 'good'
+
+                        popup.dismiss()
+                    file_chooser.bind(selection=on_file_selected)
+                    popup.open()
 
             else:
                 self.setup_file_chooser_for_other_os()
