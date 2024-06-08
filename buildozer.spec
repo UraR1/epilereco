@@ -105,10 +105,10 @@ android.minapi = 32
 android.sdk = 32
 
 # (str) Android NDK version to use
-android.ndk = ndk-18-api-level-24.config.py
+android.ndk = 25b
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-android.ndk_api = ndk-18-api-level-24.config.py
+android.ndk_api = 25b
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 #android.private_storage = True
