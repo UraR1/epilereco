@@ -29,8 +29,8 @@ class VideoPlayerApp(Screen):
 
             else:
                 self.setup_file_chooser_for_other_os()
-        except:
-            self.info_message = "Play Video"
+        except Exception as e:
+            self.info_message = f"{e}"
 
    # @mainthread
     def handle_selected_file(self, selection):
