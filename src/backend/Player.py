@@ -22,11 +22,11 @@ class VideoPlayerApp(Screen):
             os_name = platform.system()
         # self.info_message = os_name
             if os_name == 'Linux':
-                file_chooser = FileChooserListView(path=path, filters=(('*.avi'), ('*.mp4')))
-                self.popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
-                self.popup.open()
-                file_chooser.bind(selection=self.on_file_selected)
-
+                with connect():
+                    number = get_current_number()
+                user_data_dir = App.get_running_app().user_data_dir
+                user_folder_path = os.path.join(user_data_dir, str(number))
+                self.setup_file_chooser(user_folder_path)
             else:
                 self.setup_file_chooser_for_other_os()
         except Exception as e:
