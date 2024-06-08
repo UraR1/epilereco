@@ -23,6 +23,8 @@ class VideoPlayerApp(Screen):
             os_name = platform.system()
         # self.info_message = os_name
             if os_name == 'Linux':
+                with connect():
+                    number = get_current_number()
                 #from plyer import filechooser
                 #filechooser.open_file(title="Выберите видео", on_selection=self.handle_selected_file)
                 user_data_dir = App.get_running_app().user_data_dir
