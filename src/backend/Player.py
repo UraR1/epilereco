@@ -22,17 +22,17 @@ class VideoPlayerApp(Screen):
             os_name = platform.system()
         # self.info_message = os_name
             if os_name == 'Linux':
-                file_chooser = FileChooserListView(path=path)
+                file_chooser = FileChooserListView(path=path, filters=(('*.avi'), ('*.mp4')))
                 self.popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
                 self.popup.open()
                 file_chooser.bind(selection=self.on_file_selected)
 
             else:
                 self.setup_file_chooser_for_other_os()
-        except Exception as e:
-            self.info_message = f"{e}"
+        except:
+            self.info_message = "Play Video"
 
-    @mainthread
+   # @mainthread
     def handle_selected_file(self, selection):
         if selection:
             path = selection[0]
@@ -42,7 +42,7 @@ class VideoPlayerApp(Screen):
 
     def setup_file_chooser(self, path):
         try:
-            file_chooser = FileChooserListView(path=path)
+            file_chooser = FileChooserListView(path=path, filters=(('*.avi'), ('*.mp4')))
             self.popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
             self.popup.open()
             file_chooser.bind(selection=self.on_file_selected)
