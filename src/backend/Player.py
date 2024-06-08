@@ -23,28 +23,8 @@ class VideoPlayerApp(Screen):
             os_name = platform.system()
         # self.info_message = os_name
             if os_name == 'Linux':
-                cap = cv2.VideoCapture(0)
-                fps = 20.0
-                image_size = (640, 480)
-                video_file = 'res.avi'
-
-                # Check if the webcam is opened correctly
-                if not cap.isOpened():
-                    raise IOError("Cannot open webcam")
-
-                out = cv2.VideoWriter(video_file, cv2.VideoWriter_fourcc(*'XVID'), fps, image_size)
-
-                i = 0;
-                while True:
-                    ret, frame = cap.read()
-                    out.write(frame)
-                    time.sleep(0.05)
-                    i = i + 1
-                    if i > 100:
-                        break;
-
-                cap.release()
-                cv2.destroyAllWindows()
+                from plyer import filechooser
+                filechooser.open_file(title="Выберите видео", on_selection=self.handle_selected_file)
 
             else:
                 self.setup_file_chooser_for_other_os()
