@@ -33,24 +33,25 @@ class RecordAppScreen(Screen):
             if os_name == 'Linux':
                 try:
                     cap = cv2.VideoCapture(0)
-                    if cap.isOpened():
             # Определяем кодек и создаем объект VideoWriter
-                        fourcc = cv2.VideoWriter_fourcc(*'XVID')
-                        out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (640, 480))
-                        while (cap.isOpened()):
-                            ret, frame = cap.read()
-                            if ret == True:
-                                out.write(frame)
-                                cv2.imshow('frame', frame) #check imshow
-                                if cv2.waitKey(1) & 0xFF == ord('q'):
-                                    break
-                            else:
-                                break
-            # Освобождаем все ресурсы
-                        cap.release()
-                        out.release()
+                    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                    out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (640, 480))
+                    if cap.isOpened():
+                        self.info_message = "cam opened"
                     else:
-                        self.info_message = "Cam is closed"
+                        self.info_message = "cam closed"
+                    while (cap.isOpened()):
+                        ret, frame = cap.read()
+                        if ret == True:
+                            out.write(frame)
+                            cv2.imshow('frame', frame) #check imshow
+                            if cv2.waitKey(1) & 0xFF == ord('q'):
+                                break
+                        else:
+                            break
+            # Освобождаем все ресурсы
+                    cap.release()
+                    out.release()
                 except Exception as e:
                     self.info_message = f"{e}"
             else:
