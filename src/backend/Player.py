@@ -18,14 +18,17 @@ class VideoPlayerApp(Screen):
 
 
     def play_video(self, instance):
-        os_name = platform.system()
+        try:
+            os_name = platform.system()
         # self.info_message = os_name
-        if os_name == 'Linux':
-            from plyer import filechooser
-            filechooser.open_file(title="Выберите видео", on_selection=self.handle_selected_file)
+            if os_name == 'Linux':
+                from plyer import filechooser
+                filechooser.open_file(title="Выберите видео", on_selection=self.handle_selected_file)
 
-        else:
-            self.setup_file_chooser_for_other_os()
+            else:
+                self.setup_file_chooser_for_other_os()
+        except:
+            self.info_message = "Play Video"
 
     @mainthread
     def handle_selected_file(self, selection):
@@ -36,32 +39,39 @@ class VideoPlayerApp(Screen):
             self.info_message = 'Файл не выбран'
 
     def setup_file_chooser(self, path):
-        file_chooser = FileChooserListView(path=path)
-        self.popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
-        self.popup.open()
-        file_chooser.bind(selection=self.on_file_selected)
+        try:
+            file_chooser = FileChooserListView(path=path)
+            self.popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
+            self.popup.open()
+            file_chooser.bind(selection=self.on_file_selected)
+        except:
+            self.info_message = "Wrong setup file"
+
 
     def on_file_selected(self,instance, selection):
-        if selection:
-            selected = selection[0]
-            with connect():
-                number = get_current_number()
-            valid_name = number
-            filename = os.path.basename(selected)
-            os_name = platform.system()
-            if os_name == 'Windows':
-                if filename.startswith(valid_name):
+        try:
+            if selection:
+                selected = selection[0]
+                with connect():
+                    number = get_current_number()
+                valid_name = number
+                filename = os.path.basename(selected)
+                os_name = platform.system()
+                if os_name == 'Windows':
+                    if filename.startswith(valid_name):
+                        self.ids.video_player.source = selected
+                        self.ids.video_player.state = 'play'
+                        self.info_message = ''
+                    else:
+                        self.info_message = 'Choose YOUR video'
+                else:
                     self.ids.video_player.source = selected
                     self.ids.video_player.state = 'play'
                     self.info_message = ''
-                else:
-                    self.info_message = 'Choose YOUR video'
-            else:
-                self.ids.video_player.source = selected
-                self.ids.video_player.state = 'play'
-                self.info_message = ''
-        self.popup.dismiss()
-        self.popup.open()
+            self.popup.dismiss()
+            self.popup.open()
+        except:
+            self.info_message = "On file selected"
     def setup_file_chooser_for_other_os(self):
         with connect():
             number = get_current_number()
