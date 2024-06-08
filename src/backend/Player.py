@@ -9,6 +9,7 @@ from kivy.app import App
 from kivy.uix.popup import Popup
 import platform
 from kivy.clock import mainthread
+import cv2
 #from jnius import autoclass
 
 
@@ -22,36 +23,28 @@ class VideoPlayerApp(Screen):
             os_name = platform.system()
         # self.info_message = os_name
             if os_name == 'Linux':
-                with connect():
-                    number = get_current_number()
-                user_data_dir = App.get_running_app().user_data_dir
-                user_folder_path = os.path.join(user_data_dir, str(number))
-                file_chooser = FileChooserListView(path=user_folder_path, filters=(('*.avi'), ('*.mp4')))
-                self.popup = Popup(title="Выберите видео", content=file_chooser, size_hint=(0.8, 0.8))
+                cap = cv2.VideoCapture(0)
+                fps = 20.0
+                image_size = (640, 480)
+                video_file = 'res.avi'
 
-                try:
-                    if selection:
-                        selected = selection[0]
-                        with connect():
-                            number = get_current_number()
-                        valid_name = number
-                        filename = os.path.basename(selected)
-                        os_name = platform.system()
-                        if os_name == 'Windows':
-                            if filename.startswith(valid_name):
-                                self.ids.video_player.source = selected
-                                self.ids.video_player.state = 'play'
-                                self.info_message = ''
-                            else:
-                                self.info_message = 'Choose YOUR video'
-                        else:
-                            self.ids.video_player.source = selected
-                            self.ids.video_player.state = 'play'
-                            self.info_message = ''
-                    self.popup.dismiss()
-                    self.popup.open()
-                except:
-                    self.info_message = "On file selected"
+                # Check if the webcam is opened correctly
+                if not cap.isOpened():
+                    raise IOError("Cannot open webcam")
+
+                out = cv2.VideoWriter(video_file, cv2.VideoWriter_fourcc(*'XVID'), fps, image_size)
+
+                i = 0;
+                while True:
+                    ret, frame = cap.read()
+                    out.write(frame)
+                    time.sleep(0.05)
+                    i = i + 1
+                    if i > 100:
+                        break;
+
+                cap.release()
+                cv2.destroyAllWindows()
 
             else:
                 self.setup_file_chooser_for_other_os()
