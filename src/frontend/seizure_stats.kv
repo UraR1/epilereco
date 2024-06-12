@@ -8,11 +8,15 @@
         Button:
             text: 'Show Statistics'
             on_press: root.show_statistics(patient_name_input.text)
-        Label:
-            id: stats_label
-            size_hint_y: None
-            height: self.texture_size[1]
-            text: root.text_label
+        ScrollView:
+            Label:
+                id: stats_label
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+                halign: 'left'
+                valign: 'middle'
+                text: root.text_label
         Button:
             text: 'Back'
             on_press: app.root.current = 'doctor'
