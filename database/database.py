@@ -12,10 +12,10 @@ def connect():
 def setup_db():
     with connect() as connection:
         cursor = connection.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS patient (id INTEGER PRIMARY KEY, name TEXT,surname TEXT, patronymic TEXT, birth_date DATE, sex TEXT, number TEXT, doctor TEXT)''')
-        cursor.execute('''CREATE TABLE IF NOT EXISTS user_p (id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT, number TEXT)''')
-        cursor.execute('''CREATE TABLE IF NOT EXISTS user_d (id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT, number TEXT)''')
-        cursor.execute('''CREATE TABLE IF NOT EXISTS seizure (id INTEGER PRIMARY KEY, number INTEGER, patient_name TEXT, seizure_start DATE, seizure_duration INTEGER, seizure_type TEXT)''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS patient (name TEXT,surname TEXT, patronymic TEXT, birth_date DATE, sex TEXT, number TEXT, doctor TEXT)''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS user_p (username TEXT, password TEXT, role TEXT, number TEXT)''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS user_d (username TEXT, password TEXT, role TEXT, number TEXT)''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS seizure (number INTEGER, patient_name TEXT, seizure_start DATE, seizure_duration INTEGER, seizure_type TEXT)''')
         cursor.execute('''CREATE TABLE IF NOT EXISTS video (number TEXT, video_name TEXT)''')
         connection.commit()
         #cursor.execute('''CREATE TABLE IF NOT EXISTS doctor_list (id INTEGER PRIMARY KEY, number TEXT, number_p TEXT)''')
@@ -128,7 +128,7 @@ def is_valid_date(date_text):
 
 def is_valid_date_seconds(date_text):
     try:
-        datetime.datetime.strptime(date_text, '%d.%m.%Y')
+        datetime.datetime.strptime(date_text, '%Y.%m.%d')
         return True
     except ValueError:
         return False
