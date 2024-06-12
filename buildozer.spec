@@ -70,7 +70,7 @@ android.permissions = READ_EXTERNAL_STORAGE, CAMERA, WRITE_EXTERNAL_STORAGE, INT
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
 # (int) Target Android API, should be as high as possible.
-#android.api = 27
+android.api = 33
 # (int) Minimum API your APK will support.
 #android.minapi = 21
 # (int) Android SDK version to use
