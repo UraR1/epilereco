@@ -79,7 +79,7 @@ class SeizureStatsScreen(Screen):
                 else:
                     print(number_d, number_p,equals_p, equals2, equals_d)
                     self.text_label = "Wrong Patient"
-        except Exception as e:
-            print(e) #f"{e}" #"Wrong Patient or no Stats"
+        except:
+            self.text_label = "Wrong Patient or no Stats"
 
 
